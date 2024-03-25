@@ -1,0 +1,10 @@
+params: target=testphp.vulnweb.com
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: OpenRedirect
+    command: bash
+    script: |
+      gau $target | grep -a -i \=http | qsreplace 'http://evil.com' | while read host do;do curl -s -L $host -I| grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n" ;done
