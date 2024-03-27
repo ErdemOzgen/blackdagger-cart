@@ -1,0 +1,10 @@
+params: target=testphp.vulnweb.com
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: Nuclei
+    command: bash
+    script: |
+      subfinder -d $target | httpx -retries 5 | nuclei -nh
