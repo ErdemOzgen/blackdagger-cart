@@ -1,3 +1,4 @@
+description: Utilizes a combination of 'subfinder', 'httpx', and 'nuclei' for comprehensive vulnerability scanning. 'Subfinder' is employed to discover subdomains of the specified target, 'httpx' is used to confirm the accessibility and status of these subdomains with up to 5 retries for reliability, and 'nuclei' performs vulnerability scanning on the alive hosts. This orchestrated workflow efficiently identifies potential vulnerabilities across the target's domain structure, leveraging the strengths of each tool for effective security assessment.
 tags: nuclei, subfinder, httpx, vulnerability-scanning
 params: target=testphp.vulnweb.com
 env:
@@ -6,8 +7,6 @@ env:
   - PATH: /usr/local/bin:${PATH}
 steps:
   - name: Nuclei
-    description: |
-      Utilizes a combination of 'subfinder', 'httpx', and 'nuclei' for comprehensive vulnerability scanning. 'Subfinder' is employed to discover subdomains of the specified target, 'httpx' is used to confirm the accessibility and status of these subdomains with up to 5 retries for reliability, and 'nuclei' performs vulnerability scanning on the alive hosts. This orchestrated workflow efficiently identifies potential vulnerabilities across the target's domain structure, leveraging the strengths of each tool for effective security assessment.
     command: bash
     script: |
       subfinder -d $target | httpx -retries 5 | nuclei -nh
