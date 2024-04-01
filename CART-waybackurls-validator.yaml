@@ -1,0 +1,11 @@
+description: This YAML fetches a target's historical URLs, checks their availability, and sorts them by HTTP status code and URL.
+params: target=testphp.vulnweb.com
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: waybackurl
+    command: bash
+    script: |
+      waybackurls ${target//\"} | grep "url" | xargs -n 1 curl -s -o /dev/null -w "%{http_code} > %{url_effective}\n" | sort

@@ -1,0 +1,11 @@
+description: This YAML scans a target's subdomains for open web ports using Nmap in parallel, saves the results, and compiles open port details into a file.
+params: target=testphp.vulnweb.com
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: hostportversion
+    command: bash
+    script: |
+     mkdir nmap; subfinder -d ${target//\"} -silent -all | parallel -j 35 nmap {} -sTVC -host-timeout 15m -oN nmap/{} -p 22,80,443,8080 --open > /dev/null 2>&1; cd nmap; grep -Hari "/tcp" | tee -a ../services.txt; cd ../
