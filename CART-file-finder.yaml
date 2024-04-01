@@ -1,5 +1,5 @@
 description: This YAML discovers subdomains of a specified target, scans for open ports, retrieves historical URLs, and filters them for specific file types, potentially including or excluding certain patterns.
-params: target=testphp.vulnweb.com filetype=json
+params: target=vulnweb.com filetype=json
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs

@@ -1,5 +1,5 @@
 description: This YAML scans a target's subdomains for open web ports using Nmap in parallel, saves the results, and compiles open port details into a file.
-params: target=testphp.vulnweb.com
+params: target=vulnweb.com
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs

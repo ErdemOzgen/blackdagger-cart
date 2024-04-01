@@ -1,5 +1,5 @@
 description: This YAML generates a wordlist from live subdomains of a target, downloads DNS resolvers, and conducts a brute force DNS search on the target using that wordlist, saving the results.
-params: target=testphp.vulnweb.com
+params: target=vulnweb.com
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
