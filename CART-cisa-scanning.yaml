@@ -1,0 +1,11 @@
+description: The script discovers all subdomains for a target, checks their live status, and then uses Nuclei to concurrently scan up to 15 of these at a time with a 10-second timeout, focusing on vulnerabilities tagged by CISA.
+params: target=testphp.vulnweb.com
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: cisa-scanning
+    command: bash
+    script: |
+      subfinder -d ${target//\"} -all -silent | httpx -silent | nuclei -rl 50 -c 15 -timeout 10 -tags cisa -vv

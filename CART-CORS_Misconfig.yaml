@@ -1,5 +1,4 @@
 description: This step performs a security check for Cross-Origin Resource Sharing (CORS) misconfigurations on the specified target site. It utilizes 'gau' to gather URLs from the target, then curls each URL with a custom Origin header set to 'https://evil.com'. If the response includes this origin, indicating a potential CORS vulnerability, the URL is echoed with a "Potential CORS Found" message. Otherwise, it reports no issue found with the specific URL. This script is essential for identifying and mitigating security vulnerabilities related to improper CORS settings.
-
 tags: cors, security, pentest, curl
 params: target=testphp.vulnweb.com
 env:
