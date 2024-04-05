@@ -1,0 +1,4 @@
+params: target=vulnweb.com
+steps:
+  - name: DefaultLogins
+    command: subfinder -d $target | nuclei -t http/default-logins/

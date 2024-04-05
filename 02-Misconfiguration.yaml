@@ -1,0 +1,4 @@
+params: target=vulnweb.com
+steps:
+  - name: MisconfigScan
+    command: subfinder -d $target | httpx -retries 5 | nuclei -t http/misconfiguration
