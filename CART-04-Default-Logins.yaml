@@ -1,0 +1,13 @@
+description: Default login pages and default password search for webpages. It uses brute-force to find simple password. 
+tags: default, login, password
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+params: target=vulnweb.com
+steps:
+  - name: DefaultLogins
+    command: subfinder -d $target | nuclei -t http/default-logins/
+
+  - name: DefaultPasswords
+    command: wapiti -u http://${target//\"} -m brute_login_form

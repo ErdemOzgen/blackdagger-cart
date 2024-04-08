@@ -1,0 +1,11 @@
+description: Searches misconfigurations for a given domain and it's subdomains.
+tags: misconfig, misconfiguration
+params: target=vulnweb.com
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+params: target=vulnweb.com
+steps:
+  - name: MisconfigScan
+    command: subfinder -d $target | ~/go/bin/httpx -retries 5 | nuclei -t http/misconfiguration
