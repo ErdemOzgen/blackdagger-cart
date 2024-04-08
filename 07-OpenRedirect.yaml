@@ -6,11 +6,15 @@ env:
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
 steps:
-  - name: CustomOpenRedirect
+  - name: CustomOpenRedirect-External
     command: bash
     script: |
       gau ${target//\"} | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
+  - name: CustomOpenRedirect-External
+    command: bash
+    script: |
+      ~/go/bin/httpx -u ${target//\"} | katana qurl | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
   - name: AutoOpenRedirect
     command: bash
     script: |
-      wapiti -m redirect -u $target
+      wapiti -m redirect -u http://${target//\"}

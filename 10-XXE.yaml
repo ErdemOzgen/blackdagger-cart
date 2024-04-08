@@ -1,0 +1,12 @@
+description: Conduct a test to find (XML External Entity) XXE vulnerabilites.
+tags: xxe, XXE
+params: target=testphp.vulnweb.com
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: XXEFinder
+    command: bash
+    script: |
+      wapiti -m xxe -u http://${target//\"}

