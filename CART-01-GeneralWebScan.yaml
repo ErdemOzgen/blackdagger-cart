@@ -9,9 +9,9 @@ steps:
   - name: Nuclei
     command: bash
     script: |
-      httpx -d $target -retries 5 | nuclei -nh
+      ~/go/bin/httpx -d $target -retries 5 | nuclei -nh
 
   - name: Wapiti
     command: bash
     script: |
-      httpx -u $target -o res.txt; cat res.txt | xargs -I % -P 25 sh -c 'wapiti -S normal -u "%"'
+      ~/go/bin/httpx -d $target -o res.txt; cat res.txt | xargs -I % -P 25 sh -c 'wapiti -S normal -u "%"'
