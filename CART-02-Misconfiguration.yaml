@@ -1,6 +1,7 @@
 description: Searches misconfigurations for a given domain and it's subdomains.
 tags: misconfig, misconfiguration
-params: target=vulnweb.com
+params: target=vulnweb.com, header="Example:Blackdagger"
+# Change header without blank if you need or add authorization
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
@@ -8,4 +9,6 @@ env:
 params: target=vulnweb.com
 steps:
   - name: MisconfigScan
-    command: subfinder -d $target | ~/go/bin/httpx -retries 5 | nuclei -t http/misconfiguration
+    command: bash
+    script: |
+      ~/go/bin/httpx -u $target -retries 5 | nuclei -t http/misconfiguration -nh -H "$header"

