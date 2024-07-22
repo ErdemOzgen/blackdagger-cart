@@ -1,6 +1,6 @@
-description: Executes a Local File Inclusion (LFI) vulnerability test against 'testphp.vulnweb.com'. It starts by using 'gau' to gather URLs from the specified target, then filters those URLs for potential LFI vulnerabilities using 'gf'. Each URL is tested by attempting to replace a query string with the path "/etc/passwd" using 'qsreplace', followed by a 'curl' request to each modified URL. If the response contains the string "root:x", indicating that the /etc/passwd file has been successfully included (a clear sign of an LFI vulnerability), the URL is marked as vulnerable. This process is parallelized across 25 threads for efficiency.
+description: Tests for Local File Inclusion (LFI) vulnerabilities on a target. 2 steps of this YAML send 'curl' requests to modified URLs and flags those containing "root:x" as vulnerable. Another step conducts an automated scan to a target for potential LFI vulnerabilities.
 tags: lfi, security, bash, curl
-params: target=testphp.vulnweb.com, header="Example:Blackdagger"
+params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 env:
   - HOME: /root/

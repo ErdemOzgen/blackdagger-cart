@@ -4,7 +4,7 @@ env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
-params: target=vulnweb.com, header="Example:Blackdagger"
+params: target=vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 steps:
   - name: DefaultLogins
