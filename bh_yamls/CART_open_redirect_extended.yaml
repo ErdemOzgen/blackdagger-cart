@@ -1,0 +1,45 @@
+description: atomic open redirect playbook
+params: target=CHANGEME
+# Change header without blank if you need or add authorization
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+
+steps:
+  - name: prepare
+    command: rm -f crwl.txt possible_open_redirects.txt
+
+  - name: crawl
+    command: bash
+    script: |
+      ~/go/bin/httpx -u ${target//\"} | katana -o crwl.txt
+    depends:
+      - prepare
+
+  - name: parameters
+    command: bash
+    script: |
+      redirect_params="next url target rurl dest destination redir redirect_uri redirect_url redirect view to image_url go return returnTo return_to checkout_url continue return_path
+                        success data qurl login logout ext clickurl goto rit_url forward_url forward pic callback_url jump jump_url click originUrl origin Url desturl u page u1 action action_url
+                        Redirect sp_url service recurl j uri allinurl q link src linkAddress location burl request backurl RedirectUrl ReturnUrl"
+      while read -r url; do for param in $redirect_params; do if [[ "$url" == *"$param="* ]]; then echo "$url" >> possible_open_redirects.txt; fi; done; done < crwl.txt
+    depends:
+      - crawl
+
+  - name: detect
+    command: bash
+    script: |
+      malicious_url="https://evil.com"
+      while read -r url; do
+        for param in $redirect_params; do
+          test_url="${url}${param}=${malicious_url}"
+          response=$(curl -I -s "$test_url" | grep -i "location")
+          if [[ "$response" == *"$malicious_url"* ]]; then
+            echo "Vulnerable URL found: $test_url"
+          fi
+        done
+      done < possible_open_redirects.txt
+    depends:
+      - parameters
+  

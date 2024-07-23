@@ -1,0 +1,88 @@
+description: Playbook to conduct an automated recon.
+params: target=CHANGEME theHarvester_loc=/work_dir/theHarvester/theHarvester.py wordlist_loc=/root/wordlists
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: theHarvester
+    command: python3 $theHarvester_loc -d $target -b all -f theHarvester_results
+  - name: whois
+    command: whois $target
+    stdout: whois_results.txt
+    depends:
+      - theHarvester
+  - name: dnsenum
+    command: dnsenum $target
+    stdout: dnsenum_results.txt
+    depends:
+      - whois
+  - name: subfinder
+    command: subfinder -d $target -o subfinder_results.txt
+    depends:
+      - dnsenum
+  - name: whatweb
+    command: whatweb -v $target
+    stdout: whatweb_results.txt
+    depends:
+      - subfinder
+  - name: ffuf_prepare
+    command: bash
+    script: ~/go/bin/httpx -u $target --silent
+    output: FFUF_TARGET
+    depends:
+    - whatweb
+  - name: ffuf
+    command: ffuf -w $wordlist_loc/common.txt -recursion -u $FFUF_TARGET/FUZZ
+    stdout: ffuf_results.txt
+    depends:
+      - ffuf_prepare
+  - name: Report Findings
+    command: bash
+    script: |
+
+      # Output file name
+      output_file="recon_results.txt"
+
+      # List of files to concatenate
+      files=("theHarvester_results.txt" "whois_results.txt" "dnsenum_results.txt" "subfinder_results.txt" "whatweb_results.txt" "ffuf_results.txt")
+
+      # Check if the output file already exists and remove it
+      if [ -f "$output_file" ]; then
+        rm "$output_file"
+      fi
+
+      # Loop through each file
+      for file in "${files[@]}"; do
+        if [ -f "$file" ]; then
+          echo "Title: $file" >> "$output_file"
+          echo "" >> "$output_file"
+          if [ -f "theHarvester_results.json" ]; then
+            cat "theHarvester_results.json" | python3 -m json.tool >> "$output_file"
+          else
+            cat "$file" >> "$output_file"
+          fi
+          # Add two newlines after the file content
+          echo "" >> "$output_file"
+          echo "" >> "$output_file"
+          
+          # Delete the file after concatenation
+          rm "$file"
+        fi
+      done
+
+      echo "Files concatenated and original files deleted."
+    depends:
+      - ffuf
+
+
+
+
+
+
+
+
+
+  
+
+ 
