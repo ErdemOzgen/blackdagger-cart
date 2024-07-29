@@ -15,4 +15,4 @@ steps:
   - name: DefaultPasswords
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resDefaultLogin_${target//\"}.txt ; wapiti -u "$(cat resDefaultLogin_${target//\"}.txt)" -m brute_login_form -H "$header"
+      ~/go/bin/httpx -u $target -o resDefaultLogin_${target//\"}.txt ; wapiti -u "$(cat resDefaultLogin_${target//\"}.txt)" -m brute_login_form -H ${header//\"}

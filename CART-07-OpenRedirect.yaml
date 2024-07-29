@@ -18,4 +18,4 @@ steps:
   - name: AutoOpenRedirect
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resRedirect_${target//\"}.txt; wapiti -u "$(cat resRedirect_${target//\"}.txt)" -m redirect -H "$header"
+      ~/go/bin/httpx -u $target -o resRedirect_${target//\"}.txt; wapiti -u "$(cat resRedirect_${target//\"}.txt)" -m redirect -H ${header//\"}

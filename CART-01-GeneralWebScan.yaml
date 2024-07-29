@@ -15,4 +15,4 @@ steps:
   - name: Wapiti
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resGeneral_${target//\"}.txt; cat resGeneral_${target//\"}.txt | xargs -I % -P 25 sh -c 'wapiti -S normal -u "%" -H "$header"' 
+      ~/go/bin/httpx -u $target -o resGeneral_${target//\"}.txt; cat resGeneral_${target//\"}.txt | xargs -I % -P 25 sh -c 'wapiti -S normal -u "%" -H ${header//\"}' 

@@ -18,4 +18,4 @@ steps:
   - name: AutoRCE
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resRCE_${target//\"}.txt ; wapiti -u "$(cat resRCE_${target//\"}.txt)" -m exec -H "$header"
+      ~/go/bin/httpx -u $target -o resRCE_${target//\"}.txt ; wapiti -u "$(cat resRCE_${target//\"}.txt)" -m exec -H ${header//\"}

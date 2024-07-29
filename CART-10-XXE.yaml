@@ -10,4 +10,4 @@ steps:
   - name: XXEFinder
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resXXE_${target//\"}.txt ; wapiti -u "$(cat resXXE_${target//\"}.txt)" -m xxe -H "$header"
+      ~/go/bin/httpx -u $target -o resXXE_${target//\"}.txt ; wapiti -u "$(cat resXXE_${target//\"}.txt)" -m xxe -H ${header//\"}

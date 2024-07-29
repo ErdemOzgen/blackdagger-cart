@@ -18,4 +18,4 @@ steps:
   - name: AutoSSRF
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resSSRF_${target//\"}.txt ; wapiti -u "$(cat resSSRF_${target//\"}.txt)" -m ssrf -H "$header"
+      ~/go/bin/httpx -u $target -o resSSRF_${target//\"}.txt ; wapiti -u "$(cat resSSRF_${target//\"}.txt)" -m ssrf -H ${header//\"}

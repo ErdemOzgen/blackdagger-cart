@@ -20,4 +20,4 @@ steps:
   - name: AutoXSS
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resXSS_${target//\"}.txt ; wapiti -u "$(cat resXSS_${target//\"}.txt)" -m xss -H "$header"
+      ~/go/bin/httpx -u $target -o resXSS_${target//\"}.txt ; wapiti -u "$(cat resXSS_${target//\"}.txt)" -m xss -H ${header//\"}
