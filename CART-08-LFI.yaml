@@ -1,6 +1,6 @@
-description: Executes a Local File Inclusion (LFI) vulnerability test against 'testphp.vulnweb.com'. It starts by using 'gau' to gather URLs from the specified target, then filters those URLs for potential LFI vulnerabilities using 'gf'. Each URL is tested by attempting to replace a query string with the path "/etc/passwd" using 'qsreplace', followed by a 'curl' request to each modified URL. If the response contains the string "root:x", indicating that the /etc/passwd file has been successfully included (a clear sign of an LFI vulnerability), the URL is marked as vulnerable. This process is parallelized across 25 threads for efficiency.
+description: Scans for Open Redirect vulnerabilities by fetching URLs with redirection parameters ('=http'), replacing targets with 'http://evil.com' using 'qsreplace', and checking with 'curl'. URLs that redirect to 'http://evil.com' are flagged as vulnerable. Also performs an automated scan with Wapiti.
 tags: lfi, security, bash, curl
-params: target=testphp.vulnweb.com, header="Example:Blackdagger"
+params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 env:
   - HOME: /root/
@@ -18,4 +18,4 @@ steps:
   - name: AutoLFI
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resLFI_${target//\"}.txt ; wapiti -u "$(cat resLFI_${target//\"}.txt)" -m file -H "$header"
+      ~/go/bin/httpx -u $target -o resLFI_${target//\"}.txt ; wapiti -u "$(cat resLFI_${target//\"}.txt)" -m file -H ${header//\"}
