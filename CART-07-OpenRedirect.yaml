@@ -14,8 +14,8 @@ steps:
   - name: CustomOpenRedirect-Internal
     command: bash
     script: |
-      ~/go/bin/httpx -u ${target//\"} | katana -H "$header" qurl | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
   - name: AutoOpenRedirect
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resRedirect_${target//\"}.txt; wapiti -u "$(cat resRedirect_${target//\"}.txt)" -m redirect -H ${header//\"}
+      httpx -u $target -o resRedirect_${target//\"}.txt; wapiti -u "$(cat resRedirect_${target//\"}.txt)" -m redirect -H ${header//\"}

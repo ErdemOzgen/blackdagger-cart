@@ -10,9 +10,9 @@ steps:
   - name: Nuclei
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -retries 5 | nuclei -nh -H "$header"
+      httpx -u $target -retries 5 | nuclei -nh -H ${header//\"}
 
   - name: Wapiti
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resGeneral_${target//\"}.txt; cat resGeneral_${target//\"}.txt | xargs -I % -P 25 sh -c 'wapiti -S normal -u "%" -H ${header//\"}' 
+      httpx -u $target -o resGeneral_${target//\"}.txt; cat resGeneral_${target//\"}.txt | xargs -I % -P 25 sh -c 'wapiti -S normal -u "%" -H ${header//\"}' 
