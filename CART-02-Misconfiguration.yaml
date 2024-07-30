@@ -10,4 +10,4 @@ steps:
   - name: MisconfigScan
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -retries 5 | nuclei -t http/misconfiguration -nh -H "$header"
+      httpx -u $target -retries 5 | nuclei -t http/misconfiguration -nh -H ${header//\"}

