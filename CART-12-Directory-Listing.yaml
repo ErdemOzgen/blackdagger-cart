@@ -1,14 +1,13 @@
 description: Finds out directory listing on a given domain and it's subdomains.
 tags: directory-listing
-params: target=vulnweb.com, header="Example:Blackdagger"
+params: target=vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
-params: target=vulnweb.com
 steps:
   - name: DirectoryListingScan
     command: bash
     script: |
-      ~/go/bin/httpx -u $target | nuclei -t http/miscellaneous/dir-listing.yaml -nh -H "$header"
+      httpx -u $target | nuclei -t http/miscellaneous/dir-listing.yaml -nh -H ${header//\"}

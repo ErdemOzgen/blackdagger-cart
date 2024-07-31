@@ -4,15 +4,15 @@ env:
   - HOME: /root/
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
-params: target=vulnweb.com, header="Example:Blackdagger"
+params: target=vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 steps:
   - name: DefaultLogins
     command: bash
     script: |
-      ~/go/bin/httpx -u $target | nuclei -t http/default-logins/ -H "$header"
+      httpx -u $target | nuclei -t http/default-logins/ -H ${header//\"}
 
   - name: DefaultPasswords
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resDefaultLogin_${target//\"}.txt ; wapiti -u "$(cat resDefaultLogin_${target//\"}.txt)" -m brute_login_form -H "$header"
+      httpx -u $target -o resDefaultLogin_${target//\"}.txt ; wapiti -u "$(cat resDefaultLogin_${target//\"}.txt)" -m brute_login_form -H ${header//\"}
