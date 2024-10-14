@@ -1,0 +1,7 @@
+params: target=evil.com
+steps:
+  - name: Run
+    dir: $HOME/IIS-ShortName-Scanner-master/release
+    command: java -jar iis_shortname_scanner.jar $target
+
+
