@@ -7,4 +7,4 @@ steps:
   - name: lfi
     command: bash
     script: |
-      subfinder -d ${target//\"} -o subdomains.txt; paramspider -l subdomains.txt
+      subfinder -d ${target} -o subdomains.txt; paramspider -l subdomains.txt

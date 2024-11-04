@@ -8,5 +8,5 @@ steps:
   - name: iam
     command: bash
     script: |
-      subfinder -d ${target//\"} -silent -all | httpx -silent -path ".env",".mysql_history","echo $(echo $(</dev/stdin) | cut -d "." -f2).sql" -mc 200 -ports 80,443,8080,8443 | grep -E -i "AKIA[A-Z0-9]{16}" || true
+      subfinder -d ${target} -silent -all | httpx -silent -path ".env",".mysql_history","echo $(echo $(</dev/stdin) | cut -d "." -f2).sql" -mc 200 -ports 80,443,8080,8443 | grep -E -i "AKIA[A-Z0-9]{16}" || true
 

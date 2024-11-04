@@ -8,4 +8,4 @@ steps:
   - name: auto-scanning
     command: bash
     script: |
-      subfinder -d ${target//\"} -all | naabu | httpx | nuclei -nh
+      subfinder -d ${target} -all | naabu | httpx | nuclei -nh

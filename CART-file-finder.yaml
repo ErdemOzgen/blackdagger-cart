@@ -8,4 +8,4 @@ steps:
   - name: file-finder
     command: bash
     script: |
-      subfinder -d ${target//\"} -all | naabu | httpx | waybackurls | grep -E ".${filetype//\"}(?:onp?)?$"
+      subfinder -d ${target} -all | naabu | httpx | waybackurls | grep -E ".${filetype}(?:onp?)?$"

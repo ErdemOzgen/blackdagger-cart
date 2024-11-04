@@ -8,4 +8,4 @@ steps:
   - name: open-redirect
     command: bash
     script: |
-      subfinder -d ${target//\"} -all -silent | waybackurls | sort -u | gf redirect | qsreplace 'https://example.com' | httpx -fr -title --match-string 'Example Domain'
+      subfinder -d ${target} -all -silent | waybackurls | sort -u | gf redirect | qsreplace 'https://example.com' | httpx -fr -title --match-string 'Example Domain'

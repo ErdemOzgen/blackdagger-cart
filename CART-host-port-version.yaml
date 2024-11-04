@@ -8,4 +8,4 @@ steps:
   - name: hostportversion
     command: bash
     script: |
-     mkdir nmap; subfinder -d ${target//\"} -silent -all | parallel -j 35 nmap {} -sTVC -host-timeout 15m -oN nmap/{} -p 22,80,443,8080 --open > /dev/null 2>&1; cd nmap; grep -Hari "/tcp" | tee -a ../services.txt; cd ../
+     mkdir nmap; subfinder -d ${target} -silent -all | parallel -j 35 nmap {} -sTVC -host-timeout 15m -oN nmap/{} -p 22,80,443,8080 --open > /dev/null 2>&1; cd nmap; grep -Hari "/tcp" | tee -a ../services.txt; cd ../

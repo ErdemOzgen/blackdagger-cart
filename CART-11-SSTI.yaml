@@ -10,31 +10,31 @@ steps:
   - name: CustomSSTI1
     command: bash
     script: |
-      gau ${target//\"} | gf ssti | qsreplace "{{ 777 * 777 }}" | httpx -silent -mr "603729" 
+      gau ${target} | gf ssti | qsreplace "{{ 777 * 777 }}" | httpx -silent -mr "603729" 
 
   - name: CustomSSTI2
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "{{ 777 * 777 }}" | httpx -silent -mr "603729" -H ${header//\"}
+      httpx -u ${target} | katana -H ${header} qurl | qsreplace "{{ 777 * 777 }}" | httpx -silent -mr "603729" -H ${header}
   - name: CustomSSTI3
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "<%= 777 * 777 %>" | httpx -silent -mr "603729" -H ${header//\"}
+      httpx -u ${target} | katana -H ${header} qurl | qsreplace "<%= 777 * 777 %>" | httpx -silent -mr "603729" -H ${header}
   - name: CustomSSTI4
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "${{777*777}}" | httpx -silent -mr "603729" -H ${header//\"}
+      httpx -u ${target} | katana -H ${header} qurl | qsreplace "${{777*777}}" | httpx -silent -mr "603729" -H ${header}
   - name: CustomSSTI5
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "@(777*777)" | httpx -silent -mr "603729" -H ${header//\"}
+      httpx -u ${target} | katana -H ${header} qurl | qsreplace "@(777*777)" | httpx -silent -mr "603729" -H ${header}
   - name: CustomSSTI6
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "${777*777}" | httpx -silent -mr "603729" -H ${header//\"}
+      httpx -u ${target} | katana -H ${header} qurl | qsreplace "${777*777}" | httpx -silent -mr "603729" -H ${header}
   - name: CustomSSTI7
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | qsreplace "#{ 777 * 777 }" | httpx -silent -mr "603729"  -H ${header//\"}
+      httpx -u ${target} | katana -H ${header} qurl | qsreplace "#{ 777 * 777 }" | httpx -silent -mr "603729"  -H ${header}
 
       
