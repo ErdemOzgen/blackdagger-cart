@@ -1,4 +1,4 @@
-description: Scans for Open Redirect vulnerabilities by fetching URLs with redirection parameters ('=http'), replacing targets with 'http://evil.com' using 'qsreplace', and checking with 'curl'. URLs that redirect to 'http://evil.com' are flagged as vulnerable. Also performs an automated scan with Wapiti.
+description: Tests for Local File Inclusion (LFI) vulnerabilities on a target. 2 steps of this YAML send 'curl' requests to modified URLs and flags those containing "root:x" as vulnerable. Another step conducts an automated scan to a target for potential LFI vulnerabilities.
 tags: lfi, security, bash, curl
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
