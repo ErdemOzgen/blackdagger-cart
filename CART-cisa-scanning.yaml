@@ -8,4 +8,4 @@ steps:
   - name: cisa-scanning
     command: bash
     script: |
-      subfinder -d ${target//\"} -all -silent | httpx -silent | nuclei -rl 50 -c 15 -timeout 10 -tags cisa -vv
+      subfinder -d ${target} -all -silent | httpx -silent | nuclei -rl 50 -c 15 -timeout 10 -tags cisa -vv

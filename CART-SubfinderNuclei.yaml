@@ -9,4 +9,4 @@ steps:
   - name: Nuclei
     command: bash
     script: |
-      subfinder -d ${target//\"} | httpx -retries 5 | nuclei -nh
+      subfinder -d ${target} | httpx -retries 5 | nuclei -nh

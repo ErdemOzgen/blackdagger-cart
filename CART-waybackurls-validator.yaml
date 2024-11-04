@@ -8,4 +8,4 @@ steps:
   - name: waybackurl
     command: bash
     script: |
-      waybackurls ${target//\"} | grep "url" | xargs -n 1 curl -s -o /dev/null -w "%{http_code} > %{url_effective}\n" | sort
+      waybackurls ${target} | grep "url" | xargs -n 1 curl -s -o /dev/null -w "%{http_code} > %{url_effective}\n" | sort

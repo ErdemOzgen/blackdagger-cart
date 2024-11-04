@@ -13,7 +13,7 @@ steps:
   - name: crawl
     command: bash
     script: |
-      ~/go/bin/httpx -u ${target//\"} | katana -o crwl.txt
+      ~/go/bin/httpx -u ${target} | katana -o crwl.txt
     depends:
       - prepare
 

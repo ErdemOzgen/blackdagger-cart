@@ -8,7 +8,7 @@ steps:
   - name: wordlist
     command: bash
     script: |
-      subfinder -d ${target//\"} -all -silent | httpx -silent | hakrawler | tr "[:punct:]" "\n" | sort -u > wordlist.txt
+      subfinder -d ${target} -all -silent | httpx -silent | hakrawler | tr "[:punct:]" "\n" | sort -u > wordlist.txt
   - name: resolvers
     command: curl -LO https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt
     description: Use this step to download up-to-date resolvers. (optional)

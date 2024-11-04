@@ -13,7 +13,7 @@ steps:
   - name: crawl
     command: bash
     script: |
-      ~/go/bin/httpx -u ${target//\"} | katana -o crwl.txt qurl
+      ~/go/bin/httpx -u ${target} | katana -o crwl.txt qurl
     preconditions:
       - condition: "$intOrExt"
         expected: "0"
@@ -25,7 +25,7 @@ steps:
   - name: gau
     command: bash
     script: |
-      gau ${target//\"} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep = 
+      gau ${target} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep = 
     stdout: crwl.txt
     preconditions:
       - condition: "$intOrExt"

