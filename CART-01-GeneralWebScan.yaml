@@ -1,18 +1,14 @@
-description: For comprehensive vulnerability scanning, uses 'httpx' to confirm their accessibility, and 'nuclei' to scan for vulnerabilities. Also uses Wapiti in another step to provide a different perspective.
-tags: nuclei, subfinder, httpx, vulnerability-scanning, wapiti
+description: This YAML runs Nuclei and Wapiti tools to conduct a general web vulnerability scan form 2 different perspective of these tools.
+tags: nuclei, vulnerability-scanning, wapiti
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
-# Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: Nuclei
     command: bash
     script: |
-      httpx -u $target -retries 5 | nuclei -nh -H ${header}
+      nuclei -target $target -H $header
 
   - name: Wapiti
     command: bash
     script: |
-      httpx -u $target -o resGeneral_${target}.txt; cat resGeneral_${target}.txt | xargs -I % -P 25 sh -c 'wapiti -S normal -u "%" -H ${header}' 
+      wapiti -u $target -H $header 

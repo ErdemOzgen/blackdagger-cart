@@ -1,18 +1,14 @@
-description: Default login pages and default password search for webpages. It uses brute-force to find simple password. 
-tags: default, login, password
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
-params: target=vulnweb.com header="Example:Blackdagger"
+description: This YAML uses brute-force to test common and default credentials against login pages with Nuclei and Wapiti.
+tags: default, login, bruteforce
+params: target=http://vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
 steps:
   - name: DefaultLogins
     command: bash
     script: |
-      httpx -u $target | nuclei -t http/default-logins/ -H ${header}
+      nuclei -t http/default-logins/ -target $target -H $header
 
   - name: DefaultPasswords
     command: bash
     script: |
-      httpx -u $target -o resDefaultLogin_${target}.txt ; wapiti -u "$(cat resDefaultLogin_${target}.txt)" -m brute_login_form -H ${header}
+      wapiti -u $target -m brute_login_form -H $header

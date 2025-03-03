@@ -1,13 +1,8 @@
-description: Searches misconfigurations for a given domain and it's subdomains.
-tags: misconfig, misconfiguration
-params: target=vulnweb.com header="Example:Blackdagger"
-# Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+description: This YAML searches misconfigurations for a given domain with Nuclei templates.
+tags: nuclei, misconfiguration
+params: target=http://vulnweb.com header="Example:Blackdagger"
 steps:
   - name: MisconfigScan
     command: bash
     script: |
-      httpx -u $target -retries 5 | nuclei -t http/misconfiguration -nh -H ${header}
+      nuclei -t http/misconfiguration -target $target -H $header
