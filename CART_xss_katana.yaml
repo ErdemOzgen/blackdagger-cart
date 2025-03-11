@@ -2,10 +2,7 @@ description: atomic xss playbook
 tags: xss, XSS
 params: target=CHANGEME http=1
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: prepare
     command: rm -f crwl.txt qs.txt

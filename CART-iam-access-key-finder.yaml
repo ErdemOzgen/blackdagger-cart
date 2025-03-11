@@ -1,9 +1,6 @@
 description: This YAML searches for a target's subdomains, probes for sensitive files on common web ports, and looks for AWS Access Key IDs in the responses.
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: iam
     command: bash

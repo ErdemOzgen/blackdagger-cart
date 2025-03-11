@@ -2,10 +2,6 @@ description: Tests for Local File Inclusion (LFI) vulnerabilities on a target. 2
 tags: lfi, security, bash, curl
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
 steps:
   - name: CustomLFI-External
     command: bash

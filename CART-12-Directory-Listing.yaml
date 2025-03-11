@@ -2,10 +2,7 @@ description: Finds out directory listing on a given domain and it's subdomains.
 tags: directory-listing
 params: target=vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: DirectoryListingScan
     command: bash

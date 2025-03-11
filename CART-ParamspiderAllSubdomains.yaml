@@ -1,8 +1,5 @@
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: lfi
     command: bash

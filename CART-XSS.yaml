@@ -1,10 +1,7 @@
 description: Conducts security tests for LFI and XSS vulnerabilities. Uses 'gau' to fetch URLs, excluding image files, then filters URLs with query parameters and replaces them with a test XSS payload. 'Httpx' requests these modified URLs, checking for 200 status codes and the payload's identifier, indicating XSS. This identifies URLs vulnerable to both LFI and XSS, aiding in security mitigation.
 tags: lfi, xss, security, bash
 params: target=testphp.vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: lfi
     command: bash

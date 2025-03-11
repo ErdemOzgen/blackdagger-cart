@@ -1,10 +1,7 @@
 description: atomic open redirect playbook
 params: target=CHANGEME
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 
 steps:
   - name: prepare

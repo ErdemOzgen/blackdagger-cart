@@ -2,10 +2,7 @@ description: It searches whole website in order to find parameters which can cau
 tags: SSTI
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: CustomSSTI1
     command: bash

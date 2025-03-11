@@ -1,9 +1,6 @@
 description: Scans for Open Redirect vulnerabilities on the target website. This YAML discovers a target's subdomains, retrieves their historical URLs, identifies potential redirects, replaces query parameters with a test URL, and checks if any redirect to 'Example Domain'.
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: open-redirect
     command: bash

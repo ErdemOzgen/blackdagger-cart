@@ -1,10 +1,7 @@
 description: Performs a CORS misconfiguration check by using 'gau' to gather URLs from the target, then curling each with an Origin header set to 'https://evil.com'. If the response includes this origin, the URL is flagged with "Potential CORS Found"; otherwise, it reports no issue. This script identifies and mitigates CORS-related security vulnerabilities.
 tags: cors, security, pentest, curl
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: CORS
     command: bash

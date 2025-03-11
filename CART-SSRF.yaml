@@ -1,10 +1,7 @@
 description: Searches for SSRF vulnerabilities by using 'gau' to gather URLs, filtering for SSRF with 'gf', and checking with 'httpx'. Replaces query parameters with 'burpcollaborator_link' and accesses modified URLs with 'curl'. Flags URLs as vulnerable if responses contain "compute.internal," indicating internal network access via SSRF. 
 tags: ssrf, security, bash, curl
 params: target=testphp.vulnweb.com burpcollaborator_link=gyhitxcgdojfoxhbkidywa6u4mz53xaok.oast.fun
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: SSRF
     command: bash

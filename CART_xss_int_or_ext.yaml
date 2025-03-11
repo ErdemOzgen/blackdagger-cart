@@ -2,10 +2,7 @@ description: atomic xss playbook
 tags: xss, XSS
 params: target=CHANGEME intOrExt=0
 # For $intOrExt parameter, use value 1 external targets. You can use value zero for both internal and external targets.
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: prepare
     command: rm -f crwl.txt qs.txt

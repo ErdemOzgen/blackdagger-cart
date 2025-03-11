@@ -1,9 +1,6 @@
 description: Playbook to conduct an automated recon.
 params: target=CHANGEME theHarvester_loc=/work_dir/theHarvester/theHarvester.py wordlist_loc=/root/wordlists
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: theHarvester
     command: python3 $theHarvester_loc -d $target -b all -f theHarvester_results

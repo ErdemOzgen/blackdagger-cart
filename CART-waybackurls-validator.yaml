@@ -1,9 +1,6 @@
 description: This YAML fetches a target's historical URLs, checks their availability, and sorts them by HTTP status code and URL.
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: waybackurl
     command: bash
