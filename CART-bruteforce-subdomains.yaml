@@ -1,14 +1,11 @@
 description: This YAML generates a wordlist from live subdomains of a target, downloads DNS resolvers, and conducts a brute force DNS search on the target using that wordlist, saving the results.
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: wordlist
     command: bash
     script: |
-      subfinder -d ${target//\"} -all -silent | httpx -silent | hakrawler | tr "[:punct:]" "\n" | sort -u > wordlist.txt
+      subfinder -d ${target} -all -silent | httpx -silent | hakrawler | tr "[:punct:]" "\n" | sort -u > wordlist.txt
   - name: resolvers
     command: curl -LO https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt
     description: Use this step to download up-to-date resolvers. (optional)

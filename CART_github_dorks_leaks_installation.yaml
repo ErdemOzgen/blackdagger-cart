@@ -1,0 +1,41 @@
+description: Playbook to install tools for Github Dorks and leaks.
+params: target=testphp.vulnweb.com header="Example:Blackdagger"
+# Change header without blank if you need or add authorization
+
+steps:
+  - name: Install Trufflehog
+    command: bash
+    script: |
+      curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
+  - name: Install Gitleaks
+    command: bash
+    script: |
+      git clone https://github.com/gitleaks/gitleaks.git; cd gitleaks; make build
+    depends:
+      - Install Trufflehog
+  - name: Install detect-secrets
+    command: bash
+    script: |
+      pip install detect-secrets
+    depends:
+      - Install Gitleaks
+  - name: Install GitGraber
+    description: Don't forget to change config.py!
+    command: bash
+    script: |
+      git clone https://github.com/hisxo/gitGraber.git; pip install -r requirements.txt
+    depends:
+      - Install detect-secrets
+  - name: Install github-dorks
+    description: Don't forget to change config.py!
+    command: bash
+    script: |
+      git clone https://github.com/techgaun/github-dorks.git; cd github-dorks; pip install .
+    depends:
+      - Install GitGraber
+
+
+
+  
+
+ 

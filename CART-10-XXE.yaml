@@ -2,12 +2,8 @@ description: Conduct a test to find (XML External Entity) XXE vulnerabilites.
 tags: xxe, XXE
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
 steps:
   - name: XXEFinder
     command: bash
     script: |
-      httpx -u $target -o resXXE_${target//\"}.txt ; wapiti -u "$(cat resXXE_${target//\"}.txt)" -m xxe -H ${header//\"}
+      httpx -u $target -o resXXE_${target}.txt ; wapiti -u "$(cat resXXE_${target}.txt)" -m xxe -H ${header}

@@ -1,11 +1,8 @@
 description: This YAML discovers subdomains of a specified target, scans for open ports, retrieves historical URLs, and filters them for specific file types, potentially including or excluding certain patterns.
 params: target=vulnweb.com filetype=json
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: file-finder
     command: bash
     script: |
-      subfinder -d ${target//\"} -all | naabu | httpx | waybackurls | grep -E ".${filetype//\"}(?:onp?)?$"
+      subfinder -d ${target} -all | naabu | httpx | waybackurls | grep -E ".${filetype}(?:onp?)?$"

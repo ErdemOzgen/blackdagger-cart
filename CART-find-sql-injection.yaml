@@ -1,9 +1,6 @@
 description: This YAML locates a target's subdomains, gathers and deduplicates their historical URLs, filters for potential SQL injection points, tests those URLs with sqlmap for vulnerabilities, and logs the findings.
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: find-sql-injection
     command: bash

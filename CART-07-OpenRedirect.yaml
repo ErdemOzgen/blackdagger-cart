@@ -2,20 +2,16 @@ description: Scans for Open Redirect vulnerabilities by fetching URLs with redir
 tags: open-redirect, security, bash, curl
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
 steps:
   - name: CustomOpenRedirect-External
     command: bash
     script: |
-      gau ${target//\"} | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
+      gau ${target} | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
   - name: CustomOpenRedirect-Internal
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
+      httpx -u ${target} | katana -H ${header} qurl | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
   - name: AutoOpenRedirect
     command: bash
     script: |
-      httpx -u $target -o resRedirect_${target//\"}.txt; wapiti -u "$(cat resRedirect_${target//\"}.txt)" -m redirect -H ${header//\"}
+      httpx -u $target -o resRedirect_${target}.txt; wapiti -u "$(cat resRedirect_${target}.txt)" -m redirect -H ${header}

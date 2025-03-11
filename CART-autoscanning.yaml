@@ -1,11 +1,8 @@
 description: This YAML discovers a target's subdomains, scans for open ports, gathers web service data, and checks for vulnerabilities.
 params: target=vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: auto-scanning
     command: bash
     script: |
-      subfinder -d ${target//\"} -all | naabu | httpx | nuclei -nh
+      subfinder -d ${target} -all | naabu | httpx | nuclei -nh

@@ -1,12 +1,9 @@
 description: Tests for Local File Inclusion (LFI) vulnerabilities on a target. Uses 'gau' to gather URLs, filters potential LFI with 'gf', and replaces query strings with "/etc/passwd" using 'qsreplace'. Sends 'curl' requests to modified URLs and flags those containing "root:x" as vulnerable.
 tags: open-redirect, security, bash, curl
 params: target=testphp.vulnweb.com
-env:
-  - HOME: /root/
-  - LOG_DIR: ${HOME}/logs
-  - PATH: /usr/local/bin:${PATH}
+
 steps:
   - name: OpenRedirect
     command: bash
     script: |
-      gau ${target//\"} | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
+      gau ${target} | grep -a -i \=http | qsreplace 'http://evil.com' | while read host; do curl -s -L $host -I | grep "http://evil.com" && echo -e "$host \033[0;31mVulnerable\n"; done || true
